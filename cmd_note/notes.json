@@ -1,14 +1,8 @@
 [
   {
     "id": 1,
-    "title": "咖喱飯2",
-    "createDate": "Wed May 07 2025",
-    "content": "全家的咖喱飯好辣，但蠻好吃的"
-  },
-  {
-    "id": 1,
-    "title": "咖喱飯",
-    "createDate": "Wed May 07 2025",
-    "content": "全家的咖喱飯好辣，但蠻好吃的"
+    "title": "測試",
+    "createDate": "Thu May 08 2025",
+    "content": "12345"
   }
 ]
