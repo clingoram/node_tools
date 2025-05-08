@@ -22,48 +22,34 @@ async function loadNotes(){
 }
 
 /**
- * 建立id序號
- */
-function createId(){
-  let startId = 0;
-  let notesList = loadNotes();
-  // TODO: 判斷現有筆記有幾則
-  // console.log(Object.keys(notesList).length);
-
-
-  // if(notesList.length === 0){
-  //   startId = 1;
-  // }else{
-  //   startId++;
-  // }
-  // return startId;
-}
-
-/**
- * create a note
+ * 新增筆記
  * 
  * @param {string} title 
  * @param {string} content 
  */
 async function createNote(title,content){
-  let now = new Date();
-  let createDate = now.toDateString();
-  let id = createId();
+  try {
+    let now = new Date();
+    let createDate = now.toDateString();
+    let id = await handleNoteId();
 
-  // 陣列
-  // const notes = await loadNotes();
-  // // 物件
-  // const newNote = { id, title, createDate, content};
-  // // 將物件加入到陣列中
-  // notes.push(newNote);
-  // // 陣列轉成json
-  // await saveNote(notes);
+    // 陣列
+    const notes = await loadNotes();
+    // 物件
+    const newNote = { id, title, createDate, content};
+    // 將物件加入到陣列中
+    notes.push(newNote);
+    // 陣列轉成json
+    await saveNote(notes);
 
-  // console.log(`筆記 "${title}" 已成功儲存。`);
+    console.log(`筆記 "${title}" 已成功儲存。`);
+  } catch (error) {
+    console.log("發生錯誤",error);
+  }
 }
 
 /**
- * Save a note.
+ * 儲存筆記.
  * @param {*} notes 
  */
 async function saveNote(notes){
@@ -85,7 +71,7 @@ async function saveNote(notes){
  */
 async function listNotes(){
   const notesList = await loadNotes();
-  // console.log(notesList);
+
   if(notesList.length === 0){
     console.log("沒有任何筆記");
     return;
@@ -101,7 +87,10 @@ async function listNotes(){
  */
 async function searchNote(noteTitle) {
   const note = await loadNotes();
-  const find = note.find(({title}) => title === noteTitle);
+  // const find = note.find(({title}) => title === noteTitle);
+  const find = note.find(({title}) => {
+   return title === noteTitle;
+  });
   if(find){
     console.log(`- ${find.title},${find.createDate} -\n${find.content}`);
   }else{
@@ -110,29 +99,65 @@ async function searchNote(noteTitle) {
 }
 
 /**
+ * 刪除筆記
  * 
  * @param {number} id 
  */
-async function deleteNote(id){
-  // TODO: 增加刪除筆記功能
+async function deleteNoteById(deleteId){
+  // [x]: 增加刪除筆記功能(DONE)
+  try {
+    const note = await loadNotes();
+    const find = note.findIndex(({id}) => {
+      return id === parseInt(deleteId)
+    });
+    if(find === -1){
+      console.log(`找不到 id 為 ${deleteId} 的資料。`);
+      return;
+    }
+    // 刪除資料
+    note.splice(find, 1);
+    await saveNote(note);
+
+    console.log(`已成功刪除 id 為 ${deleteId} 的資料。`);
+  } catch (error) {
+    console.log("發生錯誤。",error);
+  }
+  
 }
+
+/**
+ * 建立id序號
+ */
+async function handleNoteId(){
+  const notesList = await loadNotes();
+  let startId = 0;
+  // [x]: 判斷現有筆記有幾則(DONE)
+  return Promise.all([notesList]).then((values) => {
+    values.forEach((item) => {
+      // 若長度不等於0，則計算目前共有幾筆資料再加1
+      if(Object.keys(item).length !== 0){
+        startId = Object.keys(item).length + 1;
+      }else{
+        // 否則以id = 1為起始
+        startId = 1;
+      }
+    })
+    return startId;
+  });
+}
+
 
 /**
  * 檢查參數型態
  * @param {string} param 
  * @returns {boolean}
  */
-function checkParam(param){
-  if(typeof param  === "string" || param instanceof String){
-    return true;
-  }
-  return false;
+function isString(param){
+  return typeof param === "string";
 }
 
 // main
 async function main(){
-
-  const choices = ["新增筆記","列出所有筆記","查找筆記","離開"];
 
   if(process.argv.length < 3){
     console.log("請使用以下指令：");
@@ -141,19 +166,20 @@ async function main(){
     console.log("查找筆記 -  find <標題>");
     return;
   }
+  
   const command = process.argv[2];
   const title = process.argv[3];
-  const checkType = checkParam(title)
+  const checkType = isString(title)
 
-  if(command === "add" && checkType){
-  
+  if(command === "add" && checkType === true){
     // 新增筆記
     const content = process.argv.slice(4).join(" ");
-    // FIXME: 檢查輸入值型別,是否為空
-    if(content !== null || content !== undefined){
-      createNote(title,content);
+
+    // [x]: 檢查輸入值型別以及是否為空(DONE)
+    if(content.trim() !== "" && title.trim() !== ""){
+      await createNote(title,content);
     }else{
-      console.log("請輸入筆記內容");
+      console.log("請輸入標題或筆記內容。");
     }
 
   }else if(command === "list"){
@@ -163,6 +189,12 @@ async function main(){
   }else if(command === "find" && checkType){
     // 搜尋某筆記是否存在
     await searchNote(title);
+
+  }else if(command === "delete"){
+    // 刪除筆記
+    const id = process.argv[3];
+    await deleteNoteById(id);
+
   }else{
     console.log("請使用 add ,list 或 find");
   }
