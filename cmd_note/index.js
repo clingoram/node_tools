@@ -1,5 +1,5 @@
 import {readFile,writeFile} from "node:fs/promises";
-// import * as path from "node:path";
+import { type } from "node:os";
 // import { select,input } from "@inquirer/prompts";
 
 const file = "notes.json";
@@ -73,9 +73,8 @@ async function saveNote(notes){
 }
 
 /**
- * Read 
+ * 顯示所有筆記
  * 
- * list all notes.
  * @returns 
  */
 async function listNotes(){
@@ -118,7 +117,7 @@ async function deleteNoteById(deleteId){
   try {
     const note = await loadNotes();
     const find = note.findIndex(({id}) => {
-      return id === parseInt(deleteId)
+      return id === deleteId
     });
     if(find === -1){
       console.log(`找不到 id 為 ${deleteId} 的資料。`);
@@ -127,9 +126,8 @@ async function deleteNoteById(deleteId){
     // 刪除資料
     note.splice(find, 1);
     await saveNote(note);
-
+    
     console.log(`已成功刪除 id 為 ${deleteId} 的資料。`);
-
   } catch (error) {
     console.log("發生錯誤。",error);
   }
@@ -138,23 +136,6 @@ async function deleteNoteById(deleteId){
 /**
  * 建立id序號
  */
-// async function handleNoteId(){
-//   const notesList = await loadNotes();
-//   let nextId = 0;
-//   return Promise.all([notesList]).then((values) => {
-//     values.forEach((item) => {
-//       // 若長度不等於0，則計算目前共有幾筆資料再加1
-//       if(Object.keys(item).length !== 0){
-//         nextId = Object.keys(item).length + 1;
-//       }else{
-//         // 否則以id = 1為起始
-//         nextId = 1;
-//       }
-//     })
-//     return nextId;
-//   });
-// }
-
 function handleNoteId() {
   let nextId = 0;
   return {
@@ -191,16 +172,30 @@ function isString(param){
   return typeof param === "string";
 }
 
-// main
-async function main(){
-
-  if(process.argv.length < 3){
-    console.log("請使用以下指令：");
-    console.log("新增筆記 -  add <標題> <內容>");
-    console.log("檢視所有筆記 -  list");
-    console.log("查找筆記 -  find <標題>");
+/**
+ * 使用說明
+ * @param {number} paramLen 
+ * @param {string} paramString
+ * @returns 
+ */
+function showDescriptions(paramLen,paramString){
+  const command = ["add","list","find","delete"];
+  const descriptions = [
+    "請使用以下指令：",
+    "新增筆記 -  add <標題> <內容>",
+    "檢視所有筆記 -  list",
+    "查找筆記 -  find <標題>"
+  ];
+  if(paramLen <= 4 && !command.includes(paramString)){
+    for(let i = 0;i< descriptions.length;i++) {
+      console.log(descriptions[i]);
+    }
     return;
   }
+}
+
+// main
+async function main(){
   
   const command = process.argv[2];
   const title = process.argv[3];
@@ -228,10 +223,10 @@ async function main(){
   }else if(command === "delete"){
     // 刪除筆記
     const id = process.argv[3];
-    await deleteNoteById(id);
+    await deleteNoteById(parseInt(id));
 
   }else{
-    console.log("請使用 add ,list 或 find");
+    showDescriptions(process.argv.length,process.argv);
   }
 }
 main();
