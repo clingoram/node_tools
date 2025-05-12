@@ -187,7 +187,7 @@ function showDescriptions(paramLen,paramString){
     "查找筆記 -  find <標題>"
   ];
   if(paramLen <= 4 && !command.includes(paramString)){
-    for(let i = 0;i< descriptions.length;i++) {
+    for(let i = 0;i < descriptions.length;i++) {
       console.log(descriptions[i]);
     }
     return;
