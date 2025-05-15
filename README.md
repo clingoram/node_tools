@@ -7,5 +7,3 @@ node index.js list : 列表現有筆記
 node index.js add <標題> <內容> ： 新增筆記
 node index.js search <id> : 搜尋筆記
 node index.js delete <id> : 刪除筆記
-
-<h2>cmd_unit_convert - 單位換算</h2>

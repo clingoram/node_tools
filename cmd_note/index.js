@@ -1,5 +1,4 @@
 import {readFile,writeFile} from "node:fs/promises";
-import { type } from "node:os";
 // import { select,input } from "@inquirer/prompts";
 
 const file = "notes.json";
@@ -16,6 +15,7 @@ async function loadNotes(){
       return [];
     }
     console.error("讀取筆記檔案時發生錯誤:", error);
+    // 停止node.js
     process.exit(1);
   }
 }
