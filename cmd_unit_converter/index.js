@@ -1,34 +1,6 @@
 import UnitConverter from "./converter.js";
 
 /**
- * 單位換算
- * @param {number} unit 
- * @param {string} fromUnit 
- * @param {string} toUnit 
- * @returns 
- */
-function converter(unit,fromUnit,toUnit){
-   if ((fromUnit === "meters" && toUnit === "feet") || (fromUnit === "m" && toUnit === "ft")){
-        return unit * 3.28084;
-   } else if ((fromUnit === "feet" && toUnit === "meters") || (fromUnit === "ft" && toUnit === "m")) {
-       return unit  / 3.28084;
-
-    } else if((fromUnit === "meters" && toUnit === "centimeters") || (fromUnit === "m" && toUnit === "cm")) {
-        return unit * 100;
-
-    }else if((fromUnit === "centimeters" && toUnit === "meters") || (fromUnit === "cm" && toUnit === "m")) {
-        return unit / 100;
-
-    }else if((fromUnit === "kg" && toUnit === "lb") || (fromUnit === "kilograms" && toUnit === "pounds")){
-        return unit * 2.20462
-
-    }else if((fromUnit === "lb" && toUnit === "kg") || (fromUnit === "pounds" && toUnit === "kilograms")){
-       return unit / 2.20462;
-    }else{
-        console.log("請確認單位英文是否正確。")
-    }
-}
-/**
  * 輸入參數型態驗證
  * 
  * @param {number} value
@@ -50,26 +22,32 @@ function checkType(value,fromUnit,toUnit){
  * @returns {string}
  */
 function abbreviationParam (unit){
-    switch (unit.toLowerCase) {
-        case "m":
-        case "meters":
-            return "meters";
-        case "cm":
-        case "centimeters":
-            return "centimeters";
-        case "kg":
-        case "kilograms":
-            return "kilograms";
-        case "g":
-        case "grams":
-            return "grams";
-        case "lbs":
-        case "lb":
-        case "pounds":
-            return "pounds";
-        default:
-            return unit;
+    let allUnits = ["m","meters","cm","centimeters","g","kg","lib","libs","pounds"];
+    if(allUnits.includes(unit)){
+        switch (unit.toLowerCase) {
+            case "m":
+            case "meters":
+                return "meters";
+            case "cm":
+            case "centimeters":
+                return "centimeters";
+            case "kg":
+            case "kilograms":
+                return "kilograms";
+            case "g":
+            case "grams":
+                return "grams";
+            case "lbs":
+            case "lb":
+            case "pounds":
+                return "pounds";
+            default:
+                return unit;
+        }
+    }else{
+        console.warn(`單位錯誤`);
     }
+    
 }
 /**
  * 使用說明
@@ -113,9 +91,6 @@ async function main() {
     
     if(checkType(value,fromUnit,toUnit)){
         // 各種換算
-        // result = converter(value,fromUnit,toUnit);
-
-        // oop
         let converter = new UnitConverter(value,fromUnit,toUnit);
         result = converter.doConverter();
 

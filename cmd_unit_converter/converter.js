@@ -57,7 +57,6 @@ class UnitConverter {
      * @returns 
      */
     doConverter(){
-
         if ((this.fromUnit === "meters" && this.toUnit === "feet") || (this.fromUnit === "m" && this.toUnit === "ft")){
             return this.metersToFeet()
 
