@@ -22,12 +22,15 @@ function checkType(value,fromUnit,toUnit){
  * @returns {string}
  */
 function abbreviationParam (unit){
-    let allUnits = ["m","meters","cm","centimeters","g","kg","lib","libs","pounds"];
+    let allUnits = ["m","meters","cm","centimeters","g","kg","lib","libs","pounds","km","kilometers"];
     if(allUnits.includes(unit)){
         switch (unit.toLowerCase) {
             case "m":
             case "meters":
                 return "meters";
+            case "km":
+            case "kilometers":
+                return "kilometers"
             case "cm":
             case "centimeters":
                 return "centimeters";

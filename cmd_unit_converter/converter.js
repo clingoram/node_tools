@@ -35,8 +35,15 @@ class UnitConverter {
     /**
      * 公分 => 公尺
      */
-    cenimeterToMetet() {
+    cenimeterToMetetr() {
         return this.value / 100;
+    }
+    /**
+     * 公里 => 公分
+     * @returns 
+     */
+    kilometersToCenimeter() {
+        return this.value * 100000;
     }
 
     /**
@@ -60,14 +67,17 @@ class UnitConverter {
         if ((this.fromUnit === "meters" && this.toUnit === "feet") || (this.fromUnit === "m" && this.toUnit === "ft")){
             return this.metersToFeet()
 
-        } else if ((this.fromUnit === "feet" && this.toUnit === "meters") || (this.fromUnit === "ft" && this.toUnit === "m")) {
+        } else if((this.fromUnit === "km" && this.toUnit === "cm") || (this.fromUnit === "kilometers" && this.toUnit === "cenimeters")){
+            return this.kilometersToCenimeter();
+
+        }else if ((this.fromUnit === "feet" && this.toUnit === "meters") || (this.fromUnit === "ft" && this.toUnit === "m")) {
             return this.feetToMeters()
             
         } else if((this.fromUnit === "meters" && this.toUnit === "centimeters") || (this.fromUnit === "m" && this.toUnit === "cm")) {
             return this.meterToCenimeter();
             
         }else if((this.fromUnit === "centimeters" && this.toUnit === "meters") || (this.fromUnit === "cm" && this.toUnit === "m")) {
-            return this.cenimeterToMetet();
+            return this.cenimeterToMetetr();
             
         }else if((this.fromUnit === "kg" && this.toUnit === "lb") || (this.fromUnit === "kilograms" && this.toUnit === "pounds")) {
             return this.kilogramsToPounds();
