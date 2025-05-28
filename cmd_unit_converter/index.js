@@ -1,4 +1,4 @@
-import UnitConverter from "./converter.js";
+import UnitConverter from "./converter/converter.js";
 
 /**
  * 輸入參數型態驗證
@@ -15,43 +15,6 @@ function checkType(value,fromUnit,toUnit){
     return true;
 }
 
-/**
- * 處理單位縮寫(長度、重量)
- * 
- * @param {string} unit
- * @returns {string}
- */
-function abbreviationParam (unit){
-    let allUnits = ["m","meters","cm","centimeters","g","kg","lib","libs","pounds","km","kilometers"];
-    if(allUnits.includes(unit)){
-        switch (unit.toLowerCase) {
-            case "m":
-            case "meters":
-                return "meters";
-            case "km":
-            case "kilometers":
-                return "kilometers"
-            case "cm":
-            case "centimeters":
-                return "centimeters";
-            case "kg":
-            case "kilograms":
-                return "kilograms";
-            case "g":
-            case "grams":
-                return "grams";
-            case "lbs":
-            case "lb":
-            case "pounds":
-                return "pounds";
-            default:
-                return unit;
-        }
-    }else{
-        console.warn(`單位錯誤`);
-    }
-    
-}
 /**
  * 使用說明
  * @param {number} paramLen 
@@ -88,16 +51,16 @@ async function main() {
     showDescriptions(args);
 
     const value = parseFloat(process.argv[2]);
-    const fromUnit = abbreviationParam(process.argv[3]);
-    const toUnit = abbreviationParam(process.argv[5]);
-    let result = 0;
+    const from = process.argv[3];
+    const to = process.argv[5];
     
-    if(checkType(value,fromUnit,toUnit)){
+    if(checkType(value,from,to)){
         // 各種換算
-        let converter = new UnitConverter(value,fromUnit,toUnit);
-        result = converter.doConverter();
-
-        console.log(`${value} ${fromUnit} 換算成 ${toUnit} 是 ${result} ${toUnit}`);
+        let converter = new UnitConverter();
+        converter.value = value;
+        converter.fromUnit = from;
+        converter.toUnit = to;
+        console.log(converter.doConverter());
     }
 }
 main();
