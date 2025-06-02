@@ -9,10 +9,25 @@ import UnitConverter from "./converter/converter.js";
  */
 function checkType(value,fromUnit,toUnit){
 
-    if((typeof value != "number" && value >= 0) || (typeof fromUnit !== "string" && fromUnit !== "object")|| (typeof toUnit !== "string" && toUnit !== "object")){
-        return false;
+  try {
+    // value必須是數字且非負數，from & to 必須是字串
+    if(value < 0){
+      throw new RangeError("不能是負數");
     }
-    return true;
+    if((typeof value != "number") || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
+      throw new TypeError("請確認輸入數值或字串");
+    }
+    return value;
+  } catch (error) {
+    if(error instanceof RangeError){
+        console.warn(`範圍錯誤: ${error.message}`);
+        return null;
+    }
+    if(error instanceof TypeError){
+        console.warn(`型態錯誤: ${error.message}`);
+        return null;
+    }
+  }
 }
 
 /**
@@ -48,19 +63,21 @@ function showDescriptions(paramLen){
 async function main() {
     
     const args = process.argv.slice(2);
-    showDescriptions(args);
+    // showDescriptions(args);
 
     const value = parseFloat(process.argv[2]);
-    const from = process.argv[3];
-    const to = process.argv[5];
+    const from = process.argv[3];// === " " ? "cm" :process.argv[3];
+    const to = process.argv[5];// === " " ? "m" : process.argv[5];
     
-    if(checkType(value,from,to)){
+    // if(checkType(value,from,to)){
         // 各種換算
         let converter = new UnitConverter();
         converter.value = value;
         converter.fromUnit = from;
         converter.toUnit = to;
         console.log(converter.doConverter());
-    }
+    // }else{
+    //     checkType(process.argv[2],from,to)
+    // }
 }
 main();

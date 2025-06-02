@@ -46,15 +46,15 @@ class UnitConverter {
      * @returns 
      */
     doConverter(){
-        const from = this.abbreviationUnit(this.fromUnit);
-        const to = this.abbreviationUnit(this.toUnit);
+        const from = this.abbreviationUnit(this.fromUnit) ?? this.abbreviationUnit("cm");
+        const to = this.abbreviationUnit(this.toUnit) ?? this.abbreviationUnit("m");
         const conversionKey = `${from}_${to}`;
         const value = this.value;
 
         const methodToCall = this.conversionMethods[conversionKey];
 
         try {
-            return methodToCall.call(this);
+            return `${value} ${from} 等於 ${methodToCall.call(this)} ${to}` ;
         } catch (error) {
             console.warn(`找不到 ${this.fromUnit} 到 ${this.toUnit} 的轉換方法。`);
             return null;
