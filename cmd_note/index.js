@@ -1,6 +1,4 @@
 import {readFile,writeFile} from "node:fs/promises";
-
-// import * as path from "node:path";
 // import { select,input } from "@inquirer/prompts";
 
 const file = "notes.json";
@@ -17,6 +15,7 @@ async function loadNotes(){
       return [];
     }
     console.error("讀取筆記檔案時發生錯誤:", error);
+    // 停止node.js
     process.exit(1);
   }
 }
@@ -31,18 +30,28 @@ async function createNote(title,content){
   try {
     let now = new Date();
     let createDate = now.toDateString();
-    let id = await handleNoteId();
+    // let id = await handleNoteId();
 
+    const id = handleNoteId();
     // 陣列
     const notes = await loadNotes();
-    // 物件
-    const newNote = { id, title, createDate, content};
-    // 將物件加入到陣列中
-    notes.push(newNote);
-    // 陣列轉成json
-    await saveNote(notes);
+    
+    // 透過id來調用createId()，並返回Promise
+    id.createId()
+    .then(id => {
+      console.log(id);
+      // 物件
+      const newNote = { id, title, createDate, content};
+      // 將物件加入到陣列中
+      notes.push(newNote);
+      // 陣列轉成json
+      saveNote(notes);
 
-    console.log(`筆記 "${title}" 已成功儲存。`);
+      console.log(`筆記 "${title}" 已成功儲存。`);
+    })
+    .catch(error => {
+      console.error(`Error: ${error}`);
+    });
   } catch (error) {
     console.log("發生錯誤",error);
   }
@@ -64,9 +73,8 @@ async function saveNote(notes){
 }
 
 /**
- * Read 
+ * 顯示所有筆記
  * 
- * list all notes.
  * @returns 
  */
 async function listNotes(){
@@ -76,25 +84,27 @@ async function listNotes(){
     console.log("沒有任何筆記");
     return;
   }
+  console.log("筆記如下:")
   notesList.forEach(element => {
     console.log(`- Created At: ${element.createDate}. Title: ${element.title}`)
   });
 }
 
 /**
- * get note title 
- * @param {string} noteTitle 
+ * 拿noteTitle搜尋是否有該筆記
+ * 
+ * @param {number} titleId
  */
-async function searchNote(noteTitle) {
+async function searchNote(titleId) {
   const note = await loadNotes();
-  // const find = note.find(({title}) => title === noteTitle);
-  const find = note.find(({title}) => {
-   return title === noteTitle;
-  });
+  const find = note.find(({id}) => {
+    return id === parseInt(titleId);
+  })
   if(find){
     console.log(`- ${find.title},${find.createDate} -\n${find.content}`);
   }else{
-    console.log(`找不到標題 ${noteTitle} 的筆記`);
+    // console.log(`找不到標題 ${noteTitle} 的筆記`);
+    console.log(`找不到id ${titleId} 的筆記`);
   }
 }
 
@@ -104,11 +114,10 @@ async function searchNote(noteTitle) {
  * @param {number} id 
  */
 async function deleteNoteById(deleteId){
-  // [x]: 增加刪除筆記功能(DONE)
   try {
     const note = await loadNotes();
     const find = note.findIndex(({id}) => {
-      return id === parseInt(deleteId)
+      return id === deleteId
     });
     if(find === -1){
       console.log(`找不到 id 為 ${deleteId} 的資料。`);
@@ -117,33 +126,40 @@ async function deleteNoteById(deleteId){
     // 刪除資料
     note.splice(find, 1);
     await saveNote(note);
-
+    
     console.log(`已成功刪除 id 為 ${deleteId} 的資料。`);
   } catch (error) {
     console.log("發生錯誤。",error);
   }
-  
 }
 
 /**
  * 建立id序號
  */
-async function handleNoteId(){
-  const notesList = await loadNotes();
-  let startId = 0;
-  // [x]: 判斷現有筆記有幾則(DONE)
-  return Promise.all([notesList]).then((values) => {
-    values.forEach((item) => {
-      // 若長度不等於0，則計算目前共有幾筆資料再加1
-      if(Object.keys(item).length !== 0){
-        startId = Object.keys(item).length + 1;
-      }else{
-        // 否則以id = 1為起始
-        startId = 1;
+function handleNoteId() {
+  let nextId = 0;
+  return {
+    createId: async function() {
+      try{
+        const notesList = await loadNotes();
+        // console.log(Object.keys(notesList).length);
+
+        if(Object.keys(notesList).length >= 1){
+          const existingIds = notesList.map(note => note.id).filter(id => typeof id === "number");
+          // 找到陣列中最大的 id 並加 1
+          nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
+        } else {
+          nextId = 1;
+        }
+        const currentId = nextId;
+        nextId++;
+        return currentId;
+      }catch (error){
+        console.error("載入筆記時發生錯誤：", error);
+        throw error; // 重新拋出錯誤，讓外部處理
       }
-    })
-    return startId;
-  });
+    }
+  }
 }
 
 
@@ -156,16 +172,30 @@ function isString(param){
   return typeof param === "string";
 }
 
-// main
-async function main(){
-
-  if(process.argv.length < 3){
-    console.log("請使用以下指令：");
-    console.log("新增筆記 -  add <標題> <內容>");
-    console.log("檢視所有筆記 -  list");
-    console.log("查找筆記 -  find <標題>");
+/**
+ * 使用說明
+ * @param {number} paramLen 
+ * @param {string} paramString
+ * @returns 
+ */
+function showDescriptions(paramLen,paramString){
+  const command = ["add","list","find","delete"];
+  const descriptions = [
+    "請使用以下指令：",
+    "新增筆記 -  add <標題> <內容>",
+    "檢視所有筆記 -  list",
+    "查找筆記 -  find <標題>"
+  ];
+  if(paramLen <= 4 && !command.includes(paramString)){
+    for(let i = 0;i < descriptions.length;i++) {
+      console.log(descriptions[i]);
+    }
     return;
   }
+}
+
+// main
+async function main(){
   
   const command = process.argv[2];
   const title = process.argv[3];
@@ -175,7 +205,6 @@ async function main(){
     // 新增筆記
     const content = process.argv.slice(4).join(" ");
 
-    // [x]: 檢查輸入值型別以及是否為空(DONE)
     if(content.trim() !== "" && title.trim() !== ""){
       await createNote(title,content);
     }else{
@@ -188,15 +217,16 @@ async function main(){
 
   }else if(command === "find" && checkType){
     // 搜尋某筆記是否存在
-    await searchNote(title);
+    const id = process.argv[3];
+    await searchNote(id);
 
   }else if(command === "delete"){
     // 刪除筆記
     const id = process.argv[3];
-    await deleteNoteById(id);
+    await deleteNoteById(parseInt(id));
 
   }else{
-    console.log("請使用 add ,list 或 find");
+    showDescriptions(process.argv.length,process.argv);
   }
 }
 main();
