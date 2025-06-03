@@ -46,9 +46,8 @@ class UnitConverter {
      * @returns 
      */
     doConverter(){
-        // TODO 預設單位(如果使用者沒有指定轉換單位 可以提供一個預設的目標單位)
-        const from = this.abbreviationUnit(this.fromUnit) ?? this.abbreviationUnit("cm");
-        const to = this.abbreviationUnit(this.toUnit) ?? this.abbreviationUnit("m");
+        const from = this.abbreviationUnit(this.fromUnit);
+        const to = this.abbreviationUnit(this.toUnit);
         const conversionKey = `${from}_${to}`;
         const value = this.value;
 

@@ -20,12 +20,12 @@ function checkType(value,fromUnit,toUnit){
     return value;
   } catch (error) {
     if(error instanceof RangeError){
-        console.warn(`範圍錯誤: ${error.message}`);
-        return null;
+      console.warn(`範圍錯誤: ${error.message}`);
+      return null;
     }
     if(error instanceof TypeError){
-        console.warn(`型態錯誤: ${error.message}`);
-        return null;
+      console.warn(`型態錯誤: ${error.message}`);
+      return null;
     }
   }
 }
@@ -66,20 +66,19 @@ async function main() {
     // showDescriptions(args);
 
     const value = parseFloat(process.argv[2]);
-    // TODO 預設單位 如果使用者沒有指定轉換單位 可以提供一個預設的目標單位
-    const from = process.argv[3];// === " " ? "cm" :process.argv[3];
-    const to = process.argv[5];// === " " ? "m" : process.argv[5];
+    // 若物件長度 <= 2則使用預設單位做換算
+    const from = Object.keys(process.argv).length <= 2 ? process.argv[3] : "cm";
+    const to = Object.keys(process.argv).length <= 2 ? process.argv[5]: "m";
     
-    // FIXME 輸入驗證 檢查型態。eg.value = 字串，如何處理
-    // if(checkType(value,from,to)){
-        // 各種換算
-        let converter = new UnitConverter();
-        converter.value = value;
-        converter.fromUnit = from;
-        converter.toUnit = to;
-        console.log(converter.doConverter());
-    // }else{
-    //     checkType(process.argv[2],from,to)
-    // }
+    if(checkType(value,from,to)){
+      // 各種換算
+      let converter = new UnitConverter();
+      converter.value = value;
+      converter.fromUnit = from;
+      converter.toUnit = to;
+      console.log(converter.doConverter());
+    }else{
+      checkType(process.argv[2],from,to)
+    }
 }
 main();
