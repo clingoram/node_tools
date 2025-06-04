@@ -40,16 +40,21 @@ function showDescriptions(paramLen){
   const descriptions = [
     "請使用以下指令：",
     "用法：node index.js <數值> <原始單位> <目標單位>",
-    "例如：node index.js 10 m ft",
-    "支援的長度單位：m (公尺), ft (英尺)",
+    "例如：node index.js 10 m to ft",
+    "支援的長度單位：m (公尺), ft (英尺), cm (公分)",
     "支援的重量單位：kg (公斤), lb (磅)"
   ];
-  if(paramLen.length <= 1 ){
-    for(let i = 0;i < descriptions.length;i++) {
-      console.log(descriptions[i]);
+  try {
+    if(paramLen.length <= 1 ){
+      for(let i = 0;i < descriptions.length;i++) {
+        throw new Error(descriptions[i]);
+      }
+      return null;
     }
-    return;
+  } catch (error) {
+    return null;
   }
+
 }
 
 /**
@@ -63,13 +68,13 @@ function showDescriptions(paramLen){
 async function main() {
     
     const args = process.argv.slice(2);
-    // showDescriptions(args);
+    showDescriptions(args);
 
     const value = parseFloat(process.argv[2]);
-    // 若物件長度 <= 2則使用預設單位做換算
-    const from = Object.keys(process.argv).length <= 2 ? process.argv[3] : "cm";
-    const to = Object.keys(process.argv).length <= 2 ? process.argv[5]: "m";
-    
+    // 若物件長度 <= 3 則使用預設單位做換算
+    const from = Object.keys(process.argv).length <= 3 ? "cm" : process.argv[3];
+    const to = Object.keys(process.argv).length <= 3 ? "m" : process.argv[5];
+
     if(checkType(value,from,to)){
       // 各種換算
       let converter = new UnitConverter();
