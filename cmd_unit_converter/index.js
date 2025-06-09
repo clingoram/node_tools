@@ -1,4 +1,5 @@
-import UnitConverter from "./converter/converter.js";
+// ES Modules
+import UnitConverter from "./converter/UnitConverter.js";
 
 /**
  * 輸入參數型態驗證
@@ -7,14 +8,14 @@ import UnitConverter from "./converter/converter.js";
  * @param {string} fromUnit
  * @param {string} toUnit
  */
-function checkType(value,fromUnit,toUnit){
+export function checkType(value,fromUnit,toUnit){
 
   try {
     // value必須是數字且非負數，from & to 必須是字串
     if(value < 0){
       throw new RangeError("不能是負數");
     }
-    if((typeof value != "number") || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
+    if((typeof value != "number") || (isNaN(value)) || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
       throw new TypeError("請確認輸入數值或字串");
     }
     return value;
@@ -32,11 +33,11 @@ function checkType(value,fromUnit,toUnit){
 
 /**
  * 使用說明
- * @param {number} paramLen 
- * @returns 
+ * @param {string[]} agrs 
+ * @returns {boolean} 如果參數數量不足並顯示了說明，返回 true，否則返回 false
  */
-function showDescriptions(paramLen){
-//   process.exit(1);
+export function showDescriptions(agrs){
+  // console.log(agrs.length);
   const descriptions = [
     "請使用以下指令：",
     "用法：node index.js <數值> <原始單位> <目標單位>",
@@ -44,17 +45,14 @@ function showDescriptions(paramLen){
     "支援的長度單位：m (公尺), ft (英尺), cm (公分)",
     "支援的重量單位：kg (公斤), lb (磅)"
   ];
-  try {
-    if(paramLen.length <= 1 ){
-      for(let i = 0;i < descriptions.length;i++) {
-        throw new Error(descriptions[i]);
-      }
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
 
+  if(agrs.length === 0){
+    for(let i = 0;i < descriptions.length;i++) {
+      console.warn(descriptions[i]);
+    }
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -65,28 +63,55 @@ function showDescriptions(paramLen){
  * fromUnit: 原始單位；
  * toUnit: 目標單位
  */
-async function main() {
+export async function main() {
     
     const args = process.argv.slice(2);
-    showDescriptions(args);
+    if (showDescriptions(args)) {
+      process.exit(1); // 退出程式，錯誤代碼 1 表示異常退出
+    }
 
-    const value = parseFloat(process.argv[2]);
-    // 若物件長度 <= 3 則使用預設單位做換算
-    const from = Object.keys(process.argv).length <= 3 ? "cm" : process.argv[3];
-    const to = Object.keys(process.argv).length <= 3 ? "m" : process.argv[5];
+    const valueStr = args[0];
+    let fromUnit = args[1];
+    let toKeyword = args[2];// 應該是 'to'
+    let toUnit = args[3];
 
-    if(checkType(value,from,to)){
+    const value = parseFloat(valueStr);
+    
+    // 使用預設單位做換算
+    if(args.length === 1){
+      toKeyword = "to";
+      fromUnit = "cm";
+      toUnit = "m";
+    }
+
+    if(toKeyword.toLowerCase() !== "to"){
+      console.warn("錯誤：請在原始單位和目標單位之間使用 'to' 關鍵字。");
+      showDescriptions([]);
+      process.exit(1);
+    }
+
+    const validatedValue = checkType(value,fromUnit,toUnit);
+    if(validatedValue !== null){
       // 各種換算
       let converter = new UnitConverter();
-      converter.value = value;
-      converter.fromUnit = from;
-      converter.toUnit = to;
-      console.log(converter.doConverter());
+      converter.value = validatedValue;
+      converter.fromUnit = fromUnit;
+      converter.toUnit = toUnit;
+
+      try {
+        console.log(converter.doConverter());
+        
+      } catch (error) {
+        console.error(`轉換錯誤：${error.message}`);
+        process.exit(1);
+      }
     }else{
-      checkType(process.argv[2],from,to)
+      // console.log("a")
+      process.exit(1);
     }
 }
-main();
-// module.exports = {
-//   showDescriptions
-// };
+// main();
+// for test
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}
