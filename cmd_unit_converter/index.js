@@ -11,7 +11,7 @@ import UnitConverter from "./converter/UnitConverter.js";
 export function checkType(value,fromUnit,toUnit){
 
   try {
-    // value必須是數字且非負數，from & to 必須是字串
+    // value必須是數字且非負數，fromUnit & toUnit 必須是字串
     if(value < 0){
       throw new RangeError("不能是負數");
     }
@@ -77,13 +77,13 @@ export async function main() {
 
     const value = parseFloat(valueStr);
     
-    // 使用預設單位做換算
+    // 若只出現： node index.js value，則使用預設單位做換算
     if(args.length === 1){
       toKeyword = "to";
       fromUnit = "cm";
       toUnit = "m";
     }
-
+    // "to" 打錯字
     if(toKeyword.toLowerCase() !== "to"){
       console.warn("錯誤：請在原始單位和目標單位之間使用 'to' 關鍵字。");
       showDescriptions([]);
@@ -106,12 +106,11 @@ export async function main() {
         process.exit(1);
       }
     }else{
-      // console.log("a")
       process.exit(1);
     }
 }
 // main();
 // for test
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
+// if (import.meta.url === `file://${process.argv[1]}`) {
+//   main();
+// }
