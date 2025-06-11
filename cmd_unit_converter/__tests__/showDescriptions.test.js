@@ -20,9 +20,10 @@ describe("Run showDescriptions function",() => {
   });
   afterEach(() => {
     consoleLogSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
   });
 
-  test("參數不足時，顯示說明涵式", () => {
+  test("參數不足時，顯示showDescriptions涵式", () => {
     const args = []; // 參數不足
     const result = showDescriptions(args);
     expect(result).toBe(true);
@@ -30,19 +31,18 @@ describe("Run showDescriptions function",() => {
     expect(consoleWarnSpy).toHaveBeenCalledTimes(5);
   });
 
-  // test("too拼錯", () => {
-  //   const args1 = ["10", "m", "tooo", "ft"]; // "to" 拼錯
+  // test("若too拼錯，顯示錯誤訊息", () => {
+  //   const args = ["10", "m", "tioo", "ft"]; // "to" 拼錯
 
-  //   let result = showDescriptions(args1);
-  //   expect(result).toBe(true);
-  //   expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("請使用以下指令："));
-  //   consoleLogSpy.mockClear();
-  // });
+  //   expect(args[2].toLowerCase()).not.toMatch(/to/);
+  //   expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("錯誤：請在原始單位和目標單位之間使用 'to' 關鍵字。"));
+  //   expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+  //   consoleWarnSpy.mockClear();
 
-  // test("參數正確，不會呼叫showDsecription()", () => {
-  //   const args = ["10", "m", "to", "ft"];
-  //   const result = showDescriptions(args);
-  //   expect(result).toBe(false);
-  //   expect(consoleLogSpy).not.toHaveBeenCalled(); 
+  //   // expect(result).toBe(true);
+  //   // expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("請使用以下指令："));
+  //   // expect(consoleWarnSpy).toHaveBeenCalledTimes(5);
+  //   // consoleLogSpy.mockClear();
+  //   consoleWarnSpy.mockClear();
   // });
 })

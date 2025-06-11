@@ -5,10 +5,11 @@ import UnitConverter from "./converter/UnitConverter.js";
  * 輸入參數型態驗證
  * 
  * @param {number} value
+ * @param {string} keyWord
  * @param {string} fromUnit
  * @param {string} toUnit
  */
-export function checkType(value,fromUnit,toUnit){
+export function checkType(value,fromUnit,keyWord,toUnit){
 
   try {
     // value必須是數字且非負數，fromUnit & toUnit 必須是字串
@@ -18,14 +19,21 @@ export function checkType(value,fromUnit,toUnit){
     if((typeof value != "number") || (isNaN(value)) || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
       throw new TypeError("請確認輸入數值或字串");
     }
+    if(keyWord.toLowerCase() !== "to"){
+      throw new SyntaxError("請在原始單位和目標單位之間使用 'to' 關鍵字。");
+    }
+
     return value;
+    
   } catch (error) {
     if(error instanceof RangeError){
       console.warn(`範圍錯誤: ${error.message}`);
       return null;
-    }
-    if(error instanceof TypeError){
+    }else if(error instanceof TypeError){
       console.warn(`型態錯誤: ${error.message}`);
+      return null;
+    }else if(error instanceof SyntaxError){
+      console.warn(`錯誤：${error.message}`);
       return null;
     }
   }
@@ -84,13 +92,14 @@ export async function main() {
       toUnit = "m";
     }
     // "to" 打錯字
-    if(toKeyword.toLowerCase() !== "to"){
-      console.warn("錯誤：請在原始單位和目標單位之間使用 'to' 關鍵字。");
-      showDescriptions([]);
-      process.exit(1);
-    }
+    // if(toKeyword.toLowerCase() !== "to"){
+    //   console.warn("錯誤：請在原始單位和目標單位之間使用 'to' 關鍵字。");
+    //   // showDescriptions([]);
+    //   // process.exit(1);
+    // }
 
-    const validatedValue = checkType(value,fromUnit,toUnit);
+    const validatedValue = checkType(value,fromUnit,toKeyword,toUnit);
+
     if(validatedValue !== null){
       // 各種換算
       let converter = new UnitConverter();

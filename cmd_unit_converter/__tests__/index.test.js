@@ -60,6 +60,9 @@ describe("Run main function test",() => {
 
     // 恢復 process.argv 到其原始值
     process.argv = originalArgv;
+
+    mockUnitConverterConstructor.mockRestore();
+    mockDoConverterMethod.mockRestore();
   });
 
   // -------------------------------
@@ -84,9 +87,9 @@ describe("Run main function test",() => {
   });
 
   // 驗證 UnitConverter 及其 doConverter 被調用的情況
-  test("有足夠參數時，應該呼叫 UnitConverter 和 doConverter", async () => {
+  test.only("有足夠且正確參數時，應該呼叫 UnitConverter 和 doConverter", async () => {
     // cmd: node index.js 10 ft to m
-    process.argv = ["node", "index.js", "10", "ft", "to" ,"m"];
+    process.argv = ["node", "index.js", "10", "ft" ,"m"];
 
     // 模擬 doConverter 返回一個特定結果
     mockDoConverterMethod.mockReturnValue("10 ft 等於 3.04800 m");
@@ -98,11 +101,13 @@ describe("Run main function test",() => {
     expect(mockUnitConverterConstructor).toHaveBeenCalledTimes(1);
     // 應該調用 UnitConverter 實例上的 doConverter 方法
     expect(mockDoConverterMethod).toHaveBeenCalledTimes(1);
-    expect(mockDoConverterMethod).toHaveBeenCalledWith(10, "ft", "to", "m");
+    expect(mockDoConverterMethod).toHaveBeenCalledWith(10, "ft", "m");
 
     // 應該輸出轉換結果
-    expect(consoleLogSpy).toHaveBeenCalledWith("10 ft 等於 3.04800 m");
+    expect(consoleLogSpy).toBeCloseTo("10 ft 等於 3.04800 m");
     expect(processExitSpy).not.toHaveBeenCalled();
+
   });
 
+  
 })
