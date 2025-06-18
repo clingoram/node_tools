@@ -15,11 +15,9 @@ export function checkType(value,fromUnit,keyWord,toUnit){
     // value必須是數字且非負數，fromUnit & toUnit 必須是字串
     if(value < 0){
       throw new RangeError("不能是負數");
-    }
-    if((typeof value != "number") || (isNaN(value)) || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
+    }else if((typeof value != "number") || (isNaN(value)) || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
       throw new TypeError("請確認輸入數值或字串");
-    }
-    if(keyWord.toLowerCase() !== "to"){
+    }else if(keyWord.toLowerCase() !== "to"){
       throw new SyntaxError("請在原始單位和目標單位之間使用 'to' 關鍵字。");
     }
 
@@ -29,11 +27,13 @@ export function checkType(value,fromUnit,keyWord,toUnit){
     if(error instanceof RangeError){
       console.warn(`範圍錯誤: ${error.message}`);
       return null;
-    }else if(error instanceof TypeError){
+    }
+    if(error instanceof TypeError){
       console.warn(`型態錯誤: ${error.message}`);
       return null;
-    }else if(error instanceof SyntaxError){
-      console.warn(`錯誤：${error.message}`);
+    }
+    if(error instanceof SyntaxError){
+      console.warn(`錯誤： ${error.message}`);
       return null;
     }
   }

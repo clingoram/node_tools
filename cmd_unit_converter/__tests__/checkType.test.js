@@ -24,16 +24,17 @@ describe("Sholud run checktype function test",() => {
   });
 
   test("非數值value，回傳null", () => {
+    // 2個測試參數，因此呼叫2次
     expect(checkType("abc", "m","to" ,"ft")).toBeNull();
+    expect(checkType("12","cm","to","m")).toBeNull();
     expect(consoleWarnSpy).toHaveBeenCalledWith("型態錯誤: 請確認輸入數值或字串");
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
   });
 
-  test.only("若too拼錯，顯示錯誤訊息", () => {
-    const args = ["10", "m", "tioo", "ft"]; // "to" 拼錯
-
-    expect(checkType(args[0],args[1],args[2],args[3])).toBeNull();
-    expect(consoleWarnSpy).toHaveBeenCalledWith("錯誤: 請在原始單位和目標單位之間使用 'to' 關鍵字。")
+  // "to" 拼錯
+  test("若too拼錯，顯示錯誤訊息", () => {
+    expect(checkType(10,"m","till","ft")).toBeNull();
+    expect(consoleWarnSpy).toHaveBeenCalledWith("錯誤： 請在原始單位和目標單位之間使用 'to' 關鍵字。")
     expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
   });
 })
