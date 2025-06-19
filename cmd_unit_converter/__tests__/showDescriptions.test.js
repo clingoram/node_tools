@@ -30,19 +30,4 @@ describe("Run showDescriptions function",() => {
     expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("請使用以下指令："));
     expect(consoleWarnSpy).toHaveBeenCalledTimes(5);
   });
-
-  // test("若too拼錯，顯示錯誤訊息", () => {
-  //   const args = ["10", "m", "tioo", "ft"]; // "to" 拼錯
-
-  //   expect(args[2].toLowerCase()).not.toMatch(/to/);
-  //   expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("錯誤：請在原始單位和目標單位之間使用 'to' 關鍵字。"));
-  //   expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
-  //   consoleWarnSpy.mockClear();
-
-  //   // expect(result).toBe(true);
-  //   // expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("請使用以下指令："));
-  //   // expect(consoleWarnSpy).toHaveBeenCalledTimes(5);
-  //   // consoleLogSpy.mockClear();
-  //   consoleWarnSpy.mockClear();
-  // });
 })

@@ -3,7 +3,12 @@
  */
 class UnitConverter {
 
-    constructor(){
+    constructor(value, fromUnit, toUnit){
+        this.value = value;
+        this.fromUnit = fromUnit;
+        this.toUnit = toUnit;
+        // keyword 通常是命令列參數的一部分，轉換器本身不需要這個屬性
+
         //確保單位是統一的名稱
         this.unitMap = {
             "meters": "m",
@@ -46,10 +51,13 @@ class UnitConverter {
      * @returns 
      */
     doConverter(){
-        const from = this.abbreviationUnit(this.fromUnit);
-        const to = this.abbreviationUnit(this.toUnit);
-        const conversionKey = `${from}_${to}`;
         const value = this.value;
+        // from unit
+        const from = this.abbreviationUnit(this.fromUnit);
+        // to unit
+        const to = this.abbreviationUnit(this.toUnit);
+        
+        const conversionKey = `${from}_${to}`;
 
         const methodToCall = this.conversionMethods[conversionKey];
 
