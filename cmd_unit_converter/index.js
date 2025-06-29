@@ -1,55 +1,55 @@
-import UnitConverter from "./converter/converter.js";
+// ES Modules
+import UnitConverter from "./converter/UnitConverter.js";
 
 /**
  * 輸入參數型態驗證
- * 
- * @param {number} value
- * @param {string} fromUnit
- * @param {string} toUnit
+ * 如果驗證失敗，將會拋出對應的錯誤。
+ *
+ * @param {number} value 數值
+ * @param {string} fromUnit 原始單位
+ * @param {string} keyWord 關鍵字，預期為 "to"
+ * @param {string} toUnit 目標單位
+ * @returns {number} 驗證通過的數值
+ * @throws {RangeError} 如果 value 是負數
+ * @throws {TypeError} 如果 value 不是數字、是 NaN，或 fromUnit/toUnit 不是字串
+ * @throws {SyntaxError} 如果 keyWord 不是 "to"
  */
-function checkType(value,fromUnit,toUnit){
+export function checkType(value,fromUnit,keyWord,toUnit){
 
-  try {
-    // value必須是數字且非負數，from & to 必須是字串
-    if(value < 0){
-      throw new RangeError("不能是負數");
-    }
-    if((typeof value != "number") || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
-      throw new TypeError("請確認輸入數值或字串");
-    }
-    return value;
-  } catch (error) {
-    if(error instanceof RangeError){
-      console.warn(`範圍錯誤: ${error.message}`);
-      return null;
-    }
-    if(error instanceof TypeError){
-      console.warn(`型態錯誤: ${error.message}`);
-      return null;
-    }
+  // value必須是數字且非負數，fromUnit & toUnit 必須是字串
+  if(value < 0){
+    throw new RangeError("數值不能是負數。");
+  }else if((typeof value != "number") || (isNaN(value)) || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
+    throw new TypeError("請確認輸入的數值或單位型態正確。數值必須是數字，單位必須是字串。");
+  }else if(typeof keyWord !== "string" || keyWord.toLowerCase() !== "to"){
+    throw new SyntaxError("請在原始單位和目標單位之間使用 'to' 關鍵字。");
   }
+
+  return value;
 }
 
 /**
  * 使用說明
- * @param {number} paramLen 
- * @returns 
+ * @param {string[]} agrs 
+ * @returns {boolean} 如果參數數量不足並顯示了說明，返回 true，否則返回 false
  */
-function showDescriptions(paramLen){
-//   process.exit(1);
+export function showDescriptions(agrs){
+  // console.log(agrs.length);
   const descriptions = [
     "請使用以下指令：",
     "用法：node index.js <數值> <原始單位> <目標單位>",
-    "例如：node index.js 10 m ft",
-    "支援的長度單位：m (公尺), ft (英尺)",
+    "例如：node index.js 10 m to ft",
+    "支援的長度單位：m (公尺), ft (英尺), cm (公分)",
     "支援的重量單位：kg (公斤), lb (磅)"
   ];
-  if(paramLen.length <= 1 ){
+
+  if(agrs.length === 0){
     for(let i = 0;i < descriptions.length;i++) {
-      console.log(descriptions[i]);
+      console.warn(descriptions[i]);
     }
-    return;
+    return true;
   }
+  return false;
 }
 
 /**
@@ -60,25 +60,46 @@ function showDescriptions(paramLen){
  * fromUnit: 原始單位；
  * toUnit: 目標單位
  */
-async function main() {
-    
+export async function main() {
+  try{
     const args = process.argv.slice(2);
-    // showDescriptions(args);
-
-    const value = parseFloat(process.argv[2]);
-    // 若物件長度 <= 2則使用預設單位做換算
-    const from = Object.keys(process.argv).length <= 2 ? process.argv[3] : "cm";
-    const to = Object.keys(process.argv).length <= 2 ? process.argv[5]: "m";
-    
-    if(checkType(value,from,to)){
-      // 各種換算
-      let converter = new UnitConverter();
-      converter.value = value;
-      converter.fromUnit = from;
-      converter.toUnit = to;
-      console.log(converter.doConverter());
-    }else{
-      checkType(process.argv[2],from,to)
+    if (showDescriptions(args)) {
+      process.exit(1); // 退出程式，錯誤代碼 1 表示異常退出
     }
+
+    const valueStr = args[0];
+    let fromUnit = args[1];
+    let toKeyword = args[2];// 應該是 'to'
+    let toUnit = args[3];
+
+    const value = parseFloat(valueStr);
+    
+    // 若只出現： node index.js value，則使用預設單位做換算
+    if(args.length === 1){
+      toKeyword = "to";
+      fromUnit = "cm";
+      toUnit = "m";
+    }
+
+    const validatedValue = checkType(value,fromUnit,toKeyword,toUnit);
+
+    console.log('Creating UnitConverter instance')
+
+    // 各種換算
+    let converter = new UnitConverter(value,fromUnit,toUnit);
+    console.log(converter.doConverter());
+      
+  }catch(error){
+    if (error instanceof RangeError || error instanceof TypeError || error instanceof SyntaxError) {
+      console.warn(`輸入錯誤: ${error.message}`); // 統一處理來自 checkType 的警告
+    } else {
+      console.error(`執行錯誤: ${error.message}`); // 處理其他未預期的錯誤，包括 doConverter 的錯誤
+    }
+    process.exit(1);
+  }
 }
-main();
+// main();
+// for test
+// if (import.meta.url === `file://${process.argv[1]}`) {
+//   main();
+// }
