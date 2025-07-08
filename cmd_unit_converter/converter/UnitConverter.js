@@ -50,7 +50,7 @@ class UnitConverter {
      * 依據from、to執行各methods換算
      * @returns 
      */
-    doConverter(){
+    async doConverter(){
         const value = this.value;
         // from unit
         const from = this.abbreviationUnit(this.fromUnit);
