@@ -1,7 +1,7 @@
 /**
  * 單位換算
  */
-class UnitConverter {
+export default class UnitConverter {
 
     constructor(value, fromUnit, toUnit){
         this.value = value;
@@ -115,4 +115,4 @@ class UnitConverter {
     }
 }
 
-export default UnitConverter;
+// export default UnitConverter;

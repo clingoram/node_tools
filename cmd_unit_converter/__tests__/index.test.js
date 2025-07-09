@@ -1,7 +1,6 @@
-
-import {expect, jest, test} from "@jest/globals";
-import {UnitConverter} from "../converter/UnitConverter.js";
-import {main} from "../index.js"; // 假設你的 main 函數在這裡
+import { expect, jest, test } from "@jest/globals";
+import { main } from "../index.js";
+import { UnitConverter }  from "../converter/UnitConverter.js";
 
 // ---
 // 1. **最優先：確保 jest.mock 設置在所有相關 import 之前**
@@ -31,7 +30,7 @@ jest.mock("../converter/UnitConverter.js", () => {
 
 
 describe("Run main function test",() => {
-  let consoleLogSpy;
+  // let consoleLogSpy;
   let consoleWarnSpy;
   let consoleErrorSpy;
   let processExitSpy;
@@ -50,7 +49,7 @@ describe("Run main function test",() => {
 
     UnitConverter.mockClear();
 
-    consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    // consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
     consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
     consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     processExitSpy = jest.spyOn(process,"exit").mockImplementation(() => {});
@@ -62,7 +61,7 @@ describe("Run main function test",() => {
   });
 
   afterEach(() => {
-    consoleLogSpy.mockRestore();
+    // consoleLogSpy.mockRestore();
     consoleWarnSpy.mockRestore();
     consoleErrorSpy.mockRestore();
     processExitSpy.mockRestore();

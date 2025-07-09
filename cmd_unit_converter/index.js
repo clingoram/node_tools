@@ -63,8 +63,8 @@ export function showDescriptions(agrs){
 export async function main() {
   try{
     const args = process.argv.slice(2);
-    if (showDescriptions(args)) {
-      process.exit(1); // 退出程式，錯誤代碼 1 表示異常退出
+    if (showDescriptions(args) === false) {
+      process.exit(Number(1));
     }
 
     const valueStr = args[0];
@@ -83,7 +83,7 @@ export async function main() {
 
     const validatedValue = checkType(value,fromUnit,toKeyword,toUnit);
 
-    console.log('Creating UnitConverter instance')
+    // console.log('Creating UnitConverter instance')
 
     // 各種換算
     let converter = new UnitConverter(value,fromUnit,toUnit);
@@ -95,11 +95,11 @@ export async function main() {
     } else {
       console.error(`執行錯誤: ${error.message}`); // 處理其他未預期的錯誤，包括 doConverter 的錯誤
     }
-    process.exit(1);
+    process.exit(Number(1));
   }
 }
-main();
+// main();
 // for test
-// if (import.meta.url === `file://${process.argv[1]}`) {
-//   main();
-// }
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}
