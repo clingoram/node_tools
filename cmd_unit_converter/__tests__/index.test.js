@@ -67,7 +67,7 @@ describe("Run main function test",() => {
     process.argv = ["node", "index.js", "100"];
 
     const expectedResult = "100 cm 等於 1.00000 m";
-    
+    FIXME: TypeError:UnitConverter.mockImplementationOnce is not a function
     // 為這一個test UnitConverter instance設定 doConverter 的行為
     UnitConverter.mockImplementationOnce((value, fromUnit, toUnit) => ({
       doConverter: jest.fn().mockReturnValue(expectedResult), // 回傳結果
@@ -96,7 +96,7 @@ describe("Run main function test",() => {
     process.argv = ["node", "index.js", "10", "ft","to", "m"];
 
     const expectedResult = "10 ft 等於 3.04800 m";
-
+    FIXME: TypeError:UnitConverter.mockImplementationOnce isn't a function.
     UnitConverter.mockImplementationOnce((value, fromUnit, toUnit) => ({
       doConverter: jest.fn().mockReturnValue(expectedResult),
       value: value,
