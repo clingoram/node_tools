@@ -7,6 +7,7 @@ import {showDescriptions} from "../index.js";
 describe("Run showDescriptions function",() => {
   let consoleLogSpy;
   let consoleWarnSpy;
+  let processExitSpy;
   
   beforeEach(() => {
     // console.log
@@ -24,10 +25,16 @@ describe("Run showDescriptions function",() => {
   });
 
   test("參數不足時，顯示showDescriptions涵式", () => {
+
     const args = []; // 參數不足
     const result = showDescriptions(args);
     expect(result).toBe(true);
     expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("請使用以下指令："));
     expect(consoleWarnSpy).toHaveBeenCalledTimes(5);
+
+    // expect(processExitSpy).toHaveBeenCalledWith(1);
+    // expect(processExitSpy).toHaveBeenCalledTimes(1);
+
+    // expect(UnitConverter).not.toHaveBeenCalled();
   });
 })
