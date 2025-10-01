@@ -43,6 +43,7 @@ export default class UnitConverter {
      * @returns 
      */
     abbreviationUnit(unit){
+        
         return this.unitMap[unit.toLowerCase()] || unit.toLowerCase();
     }
 
@@ -54,6 +55,7 @@ export default class UnitConverter {
         const value = this.value;
         // from unit
         const from = this.abbreviationUnit(this.fromUnit);
+        // console.log(from);
         // to unit
         const to = this.abbreviationUnit(this.toUnit);
         
