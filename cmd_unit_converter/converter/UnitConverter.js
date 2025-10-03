@@ -43,8 +43,8 @@ export default class UnitConverter {
      * @returns 
      */
     abbreviationUnit(unit){
-        
-        return this.unitMap[unit.toLowerCase()] || unit.toLowerCase();
+        return this.unitMap[unit] || unit;
+        // return this.unitMap[unit.toLowerCase()] || unit.toLowerCase();
     }
 
     /**

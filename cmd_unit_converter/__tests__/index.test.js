@@ -1,6 +1,8 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { main } from "../index.js";
 import UnitConverter from "../converter/UnitConverter.js";
+// test 
+import SomeMath from "../converter/SomeMath.js";
 
 /**
  * 
@@ -56,67 +58,90 @@ describe("Run main function test",() => {
 
 
   //  ------------------test ----------------------------------------
+
+  test('should test your method', async () => {
+    process.argv = ["node", "index.js", "100"];
+    let expectedResult = "100 cm 等於 1.00000 m";
+    // const unit = new SomeMath(10,2);
+    // const result = unit.toSum().then((result) => {
+    //     expect(result).toBe(12)
+    //     done();
+    // });
+
+    const unit = new UnitConverter(process.argv);
+    unit.doConverter = jest.fn().mockReturnValue(expectedResult)
+    // unit.doConverter().then((result) => {
+    //     expect(result).toContain(toMock)
+    //     done();
+    // });
+
+    // const expected = { name:'component name' }
+    // const actual = { name: 'component name', type: 'form' }
+    // const unit = new UnitConverter(process.argv);
+    // const toMock = jest.fn().mockReturnValue(expectedResult)
+    // unit.doConverter()
+    // .then((result) => {
+    //     expect(result).toMatchObject(expected)
+    //     done();
+    // });
+  })
+
   test.only("當只有一個數值參數時，應使用預設單位進行轉換", async () => {
     process.argv = ["node", "index.js", "100"];
 
     const expectedResult = "100 cm 等於 1.00000 m";
+    const unit = new UnitConverter(process.argv);
+    unit.doConverter = jest.fn().mockReturnValue(expectedResult)
+  });
+
+  test("有足夠且正確參數時，應該呼叫 UnitConverter", async () => {
+    // cmd: node index.js 10 ft to m
+    process.argv = ["node", "index.js", "10", "ft","to", "m"];
+    const expectedResult = "10 ft 等於 3.04800 m";
+
     // FIXME: TypeError:UnitConverter.mockImplementationOnce is not a function
-    // 為這一個test UnitConverter instance設定 doConverter 的行為
     // UnitConverter.mockImplementationOnce((value, fromUnit, toUnit) => ({
-    //   doConverter: jest.fn().mockReturnValue(expectedResult), // 永久回傳，不管mock幾次，都是expectedResult這個結果
+    //   doConverter: jest.fn().mockReturnValue(expectedResult),
     //   value: value,
     //   fromUnit: fromUnit,
     //   toUnit: toUnit,
     // }));
 
     // await main();
+    // const unit = new SomeMath(10,2);
+    // const result = unit.toSum().then((result) => {
+    //     expect(result).toBe(12)
+    //     done();
+    // });
 
+    // // 創建 UnitConverter instance
     // expect(UnitConverter).toHaveBeenCalledTimes(1);
-    // expect(UnitConverter).toHaveBeenCalledWith(100, "cm", "m");
 
+    // // UnitConverter constructor應該以正確的參數被呼叫
+    // expect(UnitConverter).toHaveBeenCalledWith(10, "ft","m");
+
+    // // 調用 UnitConverter 實例上的 doConverter 方法
+    // // 從 `UnitConverter.mock.instances` 中獲取被呼叫的實例
     // const converterInstance = UnitConverter.mock.instances[0];
     // expect(converterInstance.doConverter).toHaveBeenCalledTimes(1);
     // expect(converterInstance.doConverter).toHaveBeenCalledWith();
 
+    // // 應該要輸出轉換結果
     // expect(consoleLogSpy).toHaveBeenCalledTimes(1);
     // expect(consoleLogSpy).toHaveBeenCalledWith(expectedResult);
 
+    // // 不應該呼叫 process.exit (表示成功執行)
     // expect(processExitSpy).not.toHaveBeenCalled();
 
 
 
-    // ---------- 2025/10/1
     const unit = new UnitConverter(process.argv);
-    await unit.mockImplementation((value, fromUnit, toUnit) => ({
-      doConverter: jest.fn().mockReturnValue(expectedResult), // 永久回傳，不管mock幾次，都是expectedResult這個結果
-      value: value,
-      fromUnit: fromUnit,
-      toUnit: toUnit,
-    })).mockedMethod.mockReset();
-
-  });
-
-  test("有足夠且正確參數時，應該呼叫 UnitConverter", async () => {
-    // cmd: node index.js 10 ft to m
-    process.argv = ["node", "index.js", "10", "ft","to", "m"];
-
-    const expectedResult = "10 ft 等於 3.04800 m";
-
-    // FIXME: TypeError:UnitConverter.mockImplementationOnce is not a function
-    UnitConverter.mockImplementationOnce((value, fromUnit, toUnit) => ({
-      doConverter: jest.fn().mockReturnValue(expectedResult),
-      value: value,
-      fromUnit: fromUnit,
-      toUnit: toUnit,
-    }));
-
-    await main();
-
+    unit.doConverter = jest.fn();//.mockReturnValue(expectedResult)
     // 創建 UnitConverter instance
-    expect(UnitConverter).toHaveBeenCalledTimes(1);
+    expect(unit.doConverter).toHaveBeenCalledTimes(1)
 
     // UnitConverter constructor應該以正確的參數被呼叫
-    expect(UnitConverter).toHaveBeenCalledWith(10, "ft","m");
+    expect(unit).toHaveBeenCalledWith("10", "ft","m");
 
     // 調用 UnitConverter 實例上的 doConverter 方法
     // 從 `UnitConverter.mock.instances` 中獲取被呼叫的實例
@@ -126,9 +151,10 @@ describe("Run main function test",() => {
 
     // 應該要輸出轉換結果
     expect(consoleLogSpy).toHaveBeenCalledTimes(1);
-    expect(consoleLogSpy).toHaveBeenCalledWith(expectedResult);
+    expect(consoleLogSpy).toMatch(expectedResult);
 
     // 不應該呼叫 process.exit (表示成功執行)
     expect(processExitSpy).not.toHaveBeenCalled();
+
   });
 })
