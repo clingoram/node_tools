@@ -28,7 +28,7 @@ describe("Run showDescriptions function",() => {
 
     const args = []; // 參數不足
     const result = showDescriptions(args);
-    expect(result).toBe(true);
+    expect(result).toBe(false);
     expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("請使用以下指令："));
     expect(consoleWarnSpy).toHaveBeenCalledTimes(5);
 

@@ -35,6 +35,7 @@ export function checkType(value,fromUnit,keyWord,toUnit){
  */
 export function showDescriptions(agrs){
   // console.log(agrs.length);
+  let bool = true;
   const descriptions = [
     "請使用以下指令：",
     "用法：node index.js <數值> <原始單位> <目標單位>",
@@ -47,14 +48,14 @@ export function showDescriptions(agrs){
     for(let i = 0;i < descriptions.length;i++) {
       console.warn(descriptions[i]);
     }
-    return true;
+    bool = false
   }
-  return false;
+  return bool;
 }
 
 /**
  * input: 數值 原始單位(長度或重量的英文) to 目標單位(長度或重量的英文)
- * eg. 5 cm to m
+ * eg. node index.js 5 cm to m
  * 
  * value: 數值
  * fromUnit: 原始單位；
@@ -63,6 +64,7 @@ export function showDescriptions(agrs){
 export async function main() {
   try{
     const args = process.argv.slice(2);
+
     if (showDescriptions(args) === false) {
       process.exit(Number(1));
     }
@@ -76,8 +78,8 @@ export async function main() {
     
     // 若只出現： node index.js value，則使用預設單位做換算
     if(args.length === 1){
-      toKeyword = "to";
       fromUnit = "cm";
+      toKeyword = "to";
       toUnit = "m";
     }
 
@@ -87,7 +89,7 @@ export async function main() {
 
     // 各種換算
     let converter = new UnitConverter(value,fromUnit,toUnit);
-    console.log(converter.doConverter());
+    console.log(await converter.doConverter());
       
   }catch(error){
     if (error instanceof RangeError || error instanceof TypeError || error instanceof SyntaxError) {
