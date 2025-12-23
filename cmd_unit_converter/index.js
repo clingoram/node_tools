@@ -76,7 +76,7 @@ export async function main() {
 
     const value = parseFloat(valueStr);
     
-    // 若只出現： node index.js value，則使用預設單位做換算
+    // 若只出現： node index.js value(數值)，則使用預設單位做換算
     if(args.length === 1){
       fromUnit = "cm";
       toKeyword = "to";

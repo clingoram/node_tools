@@ -52,10 +52,11 @@ export default class UnitConverter {
      * @returns 
      */
     async doConverter(){
+        // console.log("🔥 doConverter called");
+
         const value = this.value;
         // from unit
         const from = this.abbreviationUnit(this.fromUnit);
-        // console.log(from);
         // to unit
         const to = this.abbreviationUnit(this.toUnit);
         
