@@ -10,7 +10,7 @@ import UnitConverter from "./converter/UnitConverter.js";
  * @param {string} keyWord 關鍵字，預期為 "to"
  * @param {string} toUnit 目標單位
  * @returns {number} 驗證通過的數值
- * @throws {RangeError} 如果 value 是負數
+ * @throws {RangeError} 如果 value 是負數或0
  * @throws {TypeError} 如果 value 不是數字、是 NaN，或 fromUnit/toUnit 不是字串
  * @throws {SyntaxError} 如果 keyWord 不是 "to"
  */
@@ -76,9 +76,10 @@ export async function main() {
     const value = parseFloat(args[0]);
     
     // 欲轉換的數值不能是0
-    if(value === 0){
-      process.exit(Number(1));
-    }
+    // if(value === 0){
+    //   process.exit(Number(1));
+    // }
+
     let fromUnit = args[1];
     let toKeyword = args[2];// 應該是 'to'
     let toUnit = args[3];
@@ -90,7 +91,7 @@ export async function main() {
       toUnit = "m";
     }
 
-    const validatedValue = checkType(value,fromUnit,toKeyword,toUnit);
+    checkType(value,fromUnit,toKeyword,toUnit);
 
     // console.log('Creating UnitConverter instance')
 
@@ -107,8 +108,8 @@ export async function main() {
     process.exit(Number(1));
   }
 }
-main();
+// main();
 // for test
-// if (import.meta.url === `file://${process.argv[1]}`) {
-//   main();
-// }
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}

@@ -10,10 +10,14 @@ export default class UnitConverter {
      * @param {string} toUnit 
      */
     constructor(value, fromUnit, toUnit){
+        // 檢查value是否有值
+        if(value === undefined || value === null){
+            throw new Error("未輸入有效參數。");
+        }
         this.value = value;
         this.fromUnit = fromUnit;
         this.toUnit = toUnit;
-        // keyword 通常是命令列參數的一部分，轉換器本身不需要這個屬性
+
 
         //確保單位是統一的名稱
         this.unitMap = {
@@ -43,6 +47,7 @@ export default class UnitConverter {
         };
     }
 
+
     /**
      * 正規化單位(長度、重量)，確保是小寫
      * @param {string} unit 
@@ -54,7 +59,7 @@ export default class UnitConverter {
     }
 
     /**
-     * 依據from、to執行各methods換算
+     * 依據fromUnit、toUnit執行各methods換算
      * @returns 
      */
     async doConverter(){

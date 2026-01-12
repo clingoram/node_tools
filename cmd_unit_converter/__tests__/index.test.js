@@ -64,11 +64,21 @@ describe("Run main function test",() => {
     expect(typeof unit).toBe("object");
   });
 
-  test.only("debug doConverter", () => {
-    // 測試是否會在doConverter()出現： console.log();
-    const unit = new UnitConverter(100);
-    unit.doConverter();
-  });
+  // FIXME throw error
+  test.only("constructor 沒有參數則拋出錯誤",() => {
+    const msg = "未輸入有效參數。";
+    
+    const unit = new UnitConverter(null);
+    expect(unit).toThrow(msg);
+    // expect(() => new UnitConverter()).toThrow()
+    expect(unit).toThrow(Error);
+  })
+
+  // test.only("debug doConverter", () => {
+  //   // 測試是否會在doConverter()出現： console.log();
+  //   const unit = new UnitConverter(100);
+  //   unit.doConverter();
+  // });
 
   test.only("100 cm -> 1 m (for debug)", () => {
     
@@ -149,7 +159,6 @@ describe("Run main function test",() => {
     spy.mockRestore();
 
 
-    // FIXME: TypeError:UnitConverter.mockImplementationOnce is not a function
     // UnitConverter.mockImplementationOnce((value, fromUnit, toUnit) => ({
     //   doConverter: jest.fn().mockReturnValue(expectedResult),
     //   value: value,
