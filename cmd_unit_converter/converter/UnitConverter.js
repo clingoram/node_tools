@@ -3,6 +3,12 @@
  */
 export default class UnitConverter {
 
+    /**
+     * 
+     * @param {number} value 
+     * @param {string} fromUnit 
+     * @param {string} toUnit 
+     */
     constructor(value, fromUnit, toUnit){
         this.value = value;
         this.fromUnit = fromUnit;
@@ -52,7 +58,9 @@ export default class UnitConverter {
      * @returns 
      */
     async doConverter(){
-        // console.log("🔥 doConverter called");
+
+        // console.log("🔥 doConverter called！！！！");
+        console.log("100 cm 等於 1.00000 m")
 
         const value = this.value;
         // from unit

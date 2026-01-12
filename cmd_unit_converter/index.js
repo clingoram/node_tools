@@ -29,7 +29,8 @@ export function checkType(value,fromUnit,keyWord,toUnit){
 }
 
 /**
- * 使用說明
+ * 使用說明，若只有node index.js，沒有後續的數值，執行該涵式
+ * 
  * @param {string[]} agrs 
  * @returns {boolean} 如果參數數量不足並顯示了說明，返回 true，否則返回 false
  */
@@ -49,7 +50,10 @@ export function showDescriptions(agrs){
       console.warn(descriptions[i]);
     }
     bool = false
-  }
+  } /*else if(args[0] === '0'){
+    console.log('欲轉換數值不能為0');
+    bool = false;
+  }*/
   return bool;
 }
 
@@ -64,17 +68,20 @@ export function showDescriptions(agrs){
 export async function main() {
   try{
     const args = process.argv.slice(2);
-
+    
     if (showDescriptions(args) === false) {
       process.exit(Number(1));
     }
-
-    const valueStr = args[0];
+    
+    const value = parseFloat(args[0]);
+    
+    // 欲轉換的數值不能是0
+    if(value === 0){
+      process.exit(Number(1));
+    }
     let fromUnit = args[1];
     let toKeyword = args[2];// 應該是 'to'
     let toUnit = args[3];
-
-    const value = parseFloat(valueStr);
     
     // 若只出現： node index.js value(數值)，則使用預設單位做換算
     if(args.length === 1){
@@ -100,8 +107,8 @@ export async function main() {
     process.exit(Number(1));
   }
 }
-// main();
+main();
 // for test
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
+// if (import.meta.url === `file://${process.argv[1]}`) {
+//   main();
+// }

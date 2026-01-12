@@ -58,37 +58,38 @@ describe("Run main function test",() => {
 
 
   //  ------------------test ----------------------------------------
-  test("constructor 能正確接收數值輸入", () => {
-    const unit = new UnitConverter("100");
+  test.only("constructor 能正確接收數值輸入", () => {
+    const unit = new UnitConverter(100);
 
     expect(typeof unit).toBe("object");
   });
 
   test.only("debug doConverter", () => {
-    const unit = new UnitConverter("100");
+    // 測試是否會在doConverter()出現： console.log();
+    const unit = new UnitConverter(100);
     unit.doConverter();
   });
 
-  test.only("100 cm -> 1 m (debug)", () => {
+  test.only("100 cm -> 1 m (for debug)", () => {
     
     const spy = jest.spyOn(UnitConverter.prototype, "doConverter");
 
-    const unit = new UnitConverter("100");
+    const unit = new UnitConverter(100);
 
-    console.log("before call");
+    console.log("Before call");
     unit.doConverter();
-    console.log("after call");
+    console.log("After call");
 
-    console.log("calls:", spy.mock.calls);
+    console.log("Calls:", spy.mock.calls);
 
     expect(spy).toHaveBeenCalled();
 
     spy.mockRestore();
   });
 
-  test.only("只輸入數值時，會自動使用 cm 轉換為 m", async () => {
+  test.only("只輸入數值時，會使用預設 cm 轉換為 m", async () => {
 
-    process.argv = ["node", "index.js", "100"];
+    process.argv = ["node", "index.js", 100];
 
     const expectedResult = "100 cm 等於 1.00000 m";
     const unit = new UnitConverter(process.argv[2]);
@@ -109,6 +110,7 @@ describe("Run main function test",() => {
 
     // 驗證 console.log 輸出正確
     expect(consoleLogSpy).toHaveBeenCalledWith(expectedResult);
+
     // 清理 spy
     spy.mockRestore();
     consoleLogSpy.mockRestore();
@@ -137,7 +139,7 @@ describe("Run main function test",() => {
 
     // consoleLogSpy.mockRestore();
 
-    const unit = new UnitConverter("100");
+    const unit = new UnitConverter(100,"ft","m");
     const spy = jest.spyOn(unit, "doConverter");
 
     unit.doConverter();
