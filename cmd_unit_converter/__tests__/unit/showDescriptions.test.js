@@ -1,5 +1,5 @@
 import {expect, jest, test} from "@jest/globals";
-import {showDescriptions} from "../index.js";
+import {showDescriptions} from "../../index.js";
 
 /**
  * 測試說明涵式

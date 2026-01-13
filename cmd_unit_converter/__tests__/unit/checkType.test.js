@@ -1,5 +1,5 @@
 import {expect, jest, test} from "@jest/globals";
-import {checkType} from "../index.js";
+import {checkType} from "../../index.js";
 
 describe("Sholud run checktype function test",() => {
 

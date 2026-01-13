@@ -14,6 +14,13 @@ export default class UnitConverter {
         if(value === undefined || value === null){
             throw new Error("未輸入有效參數。");
         }
+        // 若只輸入數值，沒有轉換單位
+        if(fromUnit === undefined || fromUnit === null){
+            fromUnit = "cm";
+        }
+        if(toUnit === undefined || fromUnit === null){
+            toUnit = "m";
+        }
         this.value = value;
         this.fromUnit = fromUnit;
         this.toUnit = toUnit;
@@ -63,9 +70,7 @@ export default class UnitConverter {
      * @returns 
      */
     async doConverter(){
-
-        // console.log("🔥 doConverter called！！！！");
-        console.log("100 cm 等於 1.00000 m")
+        console.log("🔥 doConverter called！！！！");
 
         const value = this.value;
         // from unit
@@ -130,5 +135,4 @@ export default class UnitConverter {
         return this.value / 2.20462;
     }
 }
-
 // export default UnitConverter;
