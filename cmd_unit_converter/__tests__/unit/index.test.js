@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 // import { main } from "../index.js";
 import UnitConverter from "../../converter/UnitConverter.js";
-// test 
-// import SomeMath from "../converter/SomeMath.js";
 
 //  ------------------test ----------------------------------------
 describe("class UnitConverter",() => {
@@ -15,10 +13,10 @@ describe("class UnitConverter",() => {
   })
 
   describe("constructor",() => {
-    test("debug doConverter", () => {
-      // 測試是否會在doConverter()出現： console.log();
-      callUnit.doConverter();
-    });
+    // test("debug doConverter", () => {
+    //   // 測試是否會在doConverter()出現： console.log();
+    //   callUnit.doConverter();
+    // });
 
     test("constructor 能正確接收數值輸入，並以物件資料型態回傳", () => {
       expect(typeof callUnit).toBe("object");
@@ -40,14 +38,14 @@ describe("class UnitConverter",() => {
       expect(result).toBe(expectedResult);
     });
 
-    test("參數內有數值、轉換單位時，可執行換算",async() => {
+    test("參數正確輸入時，可執行換算",async() => {
       const expectedResult = "100 cm 等於 1 m";
       const result = await callUnit.doConverter();
       expect(result).toBe(expectedResult);
     })
 
     test("有足夠且正確參數時，應該呼叫 UnitConverter", async () => {
-      // 確認doConverter被呼叫了
+      // 確認doConverter是否有被呼叫
       const spy = jest.spyOn(callUnit, "doConverter");
       callUnit.doConverter();
       expect(spy).toHaveBeenCalled();
