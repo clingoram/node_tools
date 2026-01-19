@@ -10,7 +10,7 @@ import UnitConverter from "./converter/UnitConverter.js";
  * @param {string} keyWord 關鍵字，預期為 "to"
  * @param {string} toUnit 目標單位
  * @returns {number} 驗證通過的數值
- * @throws {RangeError} 如果 value 是負數
+ * @throws {RangeError} 如果 value 是負數或0
  * @throws {TypeError} 如果 value 不是數字、是 NaN，或 fromUnit/toUnit 不是字串
  * @throws {SyntaxError} 如果 keyWord 不是 "to"
  */
@@ -29,7 +29,8 @@ export function checkType(value,fromUnit,keyWord,toUnit){
 }
 
 /**
- * 使用說明
+ * 使用說明，若只有node index.js，沒有後續的數值，執行該涵式
+ * 
  * @param {string[]} agrs 
  * @returns {boolean} 如果參數數量不足並顯示了說明，返回 true，否則返回 false
  */
@@ -49,7 +50,10 @@ export function showDescriptions(agrs){
       console.warn(descriptions[i]);
     }
     bool = false
-  }
+  } /*else if(args[0] === '0'){
+    console.log('欲轉換數值不能為0');
+    bool = false;
+  }*/
   return bool;
 }
 
@@ -64,26 +68,30 @@ export function showDescriptions(agrs){
 export async function main() {
   try{
     const args = process.argv.slice(2);
-
+    
     if (showDescriptions(args) === false) {
       process.exit(Number(1));
     }
+    
+    const value = parseFloat(args[0]);
+    
+    // 欲轉換的數值不能是0
+    // if(value === 0){
+    //   process.exit(Number(1));
+    // }
 
-    const valueStr = args[0];
     let fromUnit = args[1];
     let toKeyword = args[2];// 應該是 'to'
     let toUnit = args[3];
-
-    const value = parseFloat(valueStr);
     
-    // 若只出現： node index.js value，則使用預設單位做換算
+    // 若只出現： node index.js value(數值)，則使用預設單位做換算
     if(args.length === 1){
       fromUnit = "cm";
       toKeyword = "to";
       toUnit = "m";
     }
 
-    const validatedValue = checkType(value,fromUnit,toKeyword,toUnit);
+    checkType(value,fromUnit,toKeyword,toUnit);
 
     // console.log('Creating UnitConverter instance')
 

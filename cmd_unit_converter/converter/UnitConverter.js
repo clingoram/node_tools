@@ -3,11 +3,28 @@
  */
 export default class UnitConverter {
 
+    /**
+     * 
+     * @param {number} value 
+     * @param {string} fromUnit 
+     * @param {string} toUnit 
+     */
     constructor(value, fromUnit, toUnit){
+        // 檢查value是否有值
+        if(value === undefined || value === null){
+            throw new Error("未輸入有效參數。");
+        }
+        // 若只輸入數值，沒有轉換單位
+        if(fromUnit === undefined || fromUnit === null){
+            fromUnit = "cm";
+        }
+        if(toUnit === undefined || fromUnit === null){
+            toUnit = "m";
+        }
         this.value = value;
         this.fromUnit = fromUnit;
         this.toUnit = toUnit;
-        // keyword 通常是命令列參數的一部分，轉換器本身不需要這個屬性
+
 
         //確保單位是統一的名稱
         this.unitMap = {
@@ -37,6 +54,7 @@ export default class UnitConverter {
         };
     }
 
+
     /**
      * 正規化單位(長度、重量)，確保是小寫
      * @param {string} unit 
@@ -48,14 +66,15 @@ export default class UnitConverter {
     }
 
     /**
-     * 依據from、to執行各methods換算
+     * 依據fromUnit、toUnit執行各methods換算
      * @returns 
      */
     async doConverter(){
+        console.log("🔥 doConverter called！！！！");
+
         const value = this.value;
         // from unit
         const from = this.abbreviationUnit(this.fromUnit);
-        // console.log(from);
         // to unit
         const to = this.abbreviationUnit(this.toUnit);
         
@@ -116,5 +135,4 @@ export default class UnitConverter {
         return this.value / 2.20462;
     }
 }
-
 // export default UnitConverter;

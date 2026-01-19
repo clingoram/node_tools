@@ -1,5 +1,6 @@
 import {expect, jest, test} from "@jest/globals";
-import {showDescriptions} from "../index.js";
+import {showDescriptions} from "../../index.js";
+// import UnitConverter from "../../converter/UnitConverter.js";
 
 /**
  * 測試說明涵式
@@ -7,9 +8,10 @@ import {showDescriptions} from "../index.js";
 describe("Run showDescriptions function",() => {
   let consoleLogSpy;
   let consoleWarnSpy;
-  let processExitSpy;
+  // let processExitSpy;
   
   beforeEach(() => {
+    // 不會真的印出來，能驗證是否被呼叫
     // console.log
     consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
     // console.warn
@@ -34,7 +36,6 @@ describe("Run showDescriptions function",() => {
 
     // expect(processExitSpy).toHaveBeenCalledWith(1);
     // expect(processExitSpy).toHaveBeenCalledTimes(1);
-
-    // expect(UnitConverter).not.toHaveBeenCalled();
+    
   });
 })
