@@ -11,14 +11,14 @@ export default class UnitConverter {
      */
     constructor(value, fromUnit, toUnit){
         // 檢查value是否有值
-        if(value === undefined || value === null){
+        if(value === undefined || value === null || value === '' || value === NaN || value < 0){
             throw new Error("未輸入有效參數。");
         }
         // 若只輸入數值，沒有轉換單位
-        if(fromUnit === undefined || fromUnit === null){
+        if(fromUnit === undefined || fromUnit === null || fromUnit === ''){
             fromUnit = "cm";
         }
-        if(toUnit === undefined || fromUnit === null){
+        if(toUnit === undefined || fromUnit === null || toUnit === ''){
             toUnit = "m";
         }
         this.value = value;
@@ -61,8 +61,8 @@ export default class UnitConverter {
      * @returns 
      */
     abbreviationUnit(unit){
-        return this.unitMap[unit] || unit;
-        // return this.unitMap[unit.toLowerCase()] || unit.toLowerCase();
+        // return this.unitMap[unit] || unit;
+        return this.unitMap[unit.toLowerCase()] || unit.toLowerCase();
     }
 
     /**
