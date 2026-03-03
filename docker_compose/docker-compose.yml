@@ -1,0 +1,33 @@
+version: "3"
+services:
+  base:
+    build:
+      context: ./base-image # 基底 image
+    image: my-node-base:latest
+
+  project-a:
+    build:
+      context: ./project-a # 專案 A
+    depends_on:
+      - base
+    image: project-a:latest
+    ports:
+      - "3000:3000"
+
+  project-b:
+    build:
+      context: ./project-b # 專案 B
+    depends_on:
+      - base
+    image: project-b:latest
+    ports:
+      - "3001:3001"
+
+  project-c:
+    build:
+      context: ./project-c # 專案 C
+    depends_on:
+      - base
+    image: project-c:latest
+    ports:
+      - "3002:3002"
