@@ -31,3 +31,23 @@ services:
     image: project-c:latest
     ports:
       - "3002:3002"
+      
+# -----
+version: "3"
+
+services:
+
+  user-service:
+    build: ./service-user
+    ports:
+      - "3001:3000"
+
+  order-service:
+    build: ./service-order
+    ports:
+      - "3002:3000"
+
+  payment-service:
+    build: ./service-payment
+    ports:
+      - "3003:3000"
