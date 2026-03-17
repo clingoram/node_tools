@@ -22,7 +22,7 @@ export function checkType(value,fromUnit,keyWord,toUnit){
   }else if((typeof value != "number") || (isNaN(value)) || (typeof fromUnit !== "string")|| (typeof toUnit !== "string")){
     throw new TypeError("請確認輸入的數值或單位型態正確。數值必須是數字，單位必須是字串。");
   }else if(typeof keyWord !== "string" || keyWord.toLowerCase() !== "to"){
-    throw new SyntaxError("請在原始單位和目標單位之間使用 'to' 關鍵字。");
+    throw new SyntaxError("請在原始單位和目標單位之間使用'to'關鍵字。");
   }
 
   return value;
